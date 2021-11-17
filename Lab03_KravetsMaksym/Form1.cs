@@ -14,6 +14,8 @@ namespace Lab03_KravetsMaksym
 {
     public partial class Form1 : Form
     {
+        byte[] arrAfterXOR;
+        bool flag = false;
         public Form1()
         {
             InitializeComponent();
@@ -40,24 +42,33 @@ namespace Lab03_KravetsMaksym
 
                 arr_cipher[i] = c;
             }
+            arrAfterXOR = arr_cipher;
             return arr_cipher;
         }
 
-        string myCipher(TextBox tb_text, TextBox tb_Key, TextBox tb_cipher, string cipher = "")
+        string myCipher(TextBox tb_text, TextBox tb_Key, TextBox tb_cipher)
         {
             string text = tb_text.Text;
             byte[] arr_text;
-            if (cipher == "") arr_text = Encoding.UTF8.GetBytes(text);
-            else arr_text = Encoding.UTF8.GetBytes(cipher);
+            if (flag == false)
+            {
+                arr_text = Encoding.UTF32.GetBytes(text);
+                flag = true;
+            }
+            else 
+            {
+                arr_text = arrAfterXOR;
+                flag = false;
+            }
             myShowToolTip(tb_text, arr_text); // Створити підказку
 
             string key = tb_Key.Text;
-            byte[] arr_key = Encoding.UTF8.GetBytes(key);
+            byte[] arr_key = Encoding.UTF32.GetBytes(key);
             myShowToolTip(tb_Key, arr_key); // Створити підказку
 
             byte[] arr_cipher = myXOR(arr_text, arr_key);
 
-            cipher = Encoding.UTF8.GetString(arr_cipher);
+            string cipher = Encoding.UTF32.GetString(arr_cipher);
             tb_cipher.Text = cipher;
             myShowToolTip(tb_cipher, arr_cipher); // Створити підказку
 
@@ -77,7 +88,7 @@ namespace Lab03_KravetsMaksym
                 string cipher = myCipher(textBox_P_IN, textBox_Key_IN, textbox_C_IN); // зашифрування
                 textBox_P_OUT.Text = textbox_C_IN.Text;
                 textBox_Key_OUT.Text = textBox_Key_IN.Text;
-                myCipher(textBox_P_OUT, textBox_Key_OUT, textBox_C_OUT, cipher); // розшифрування
+                myCipher(textBox_P_OUT, textBox_Key_OUT, textBox_C_OUT); // розшифрування
             }
         }
 
